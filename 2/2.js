@@ -19,7 +19,7 @@ function countInstancesOfCharInString(char, string) {
   return string.replace(regexNotMatchingChar, "").length;
 }
 
-function passwordIsValid(objectifiedPasswordPolicy) {
+function passwordIsValidPuzzle1(objectifiedPasswordPolicy) {
   const { min, max, char, password } = objectifiedPasswordPolicy;
   const countOfCharInstancesInPassword = countInstancesOfCharInString(
     char,
@@ -31,12 +31,33 @@ function passwordIsValid(objectifiedPasswordPolicy) {
   );
 }
 
+function passwordIsValidPuzzle2(objectifiedPasswordPolicy) {
+  const { char, password } = objectifiedPasswordPolicy;
+  // Just renaming the initial min-max values to fit our use case here. I know I'm being lazy.
+  const firstPositionIndex = objectifiedPasswordPolicy.min;
+  const secondPositionIndex = objectifiedPasswordPolicy.max;
+
+  // Tobogganites don't use zero-based indexing. Sigh.
+  const firstPositionInOneBasedIndex = firstPositionIndex - 1;
+  const secondPositionInOneBasedIndex = secondPositionIndex - 1;
+
+  const firstPositionHasChar = password[firstPositionInOneBasedIndex] === char;
+  const secondPositionHasChar =
+    password[secondPositionInOneBasedIndex] === char;
+
+  // Needed to simulate an xor.
+  return (
+    (firstPositionHasChar && !secondPositionHasChar) ||
+    (!firstPositionHasChar && secondPositionHasChar)
+  );
+}
+
 let validPasswords = 0;
 for (let passwordGuidelines of input) {
   const objectifiedPasswordPolicy = transformPasswordPolicyToObject(
     passwordGuidelines
   );
-  if (passwordIsValid(objectifiedPasswordPolicy)) {
+  if (passwordIsValidPuzzle2(objectifiedPasswordPolicy)) {
     validPasswords++;
   }
 }
