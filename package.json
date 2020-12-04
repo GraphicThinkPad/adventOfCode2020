@@ -1,0 +1,11 @@
+{
+  "name": "adventOfCode2020",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/GraphicThinkPad/adventOfCode2020.git",
+  "author": "Kory Smith <kory.smith@kroger.com>",
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^4.17.20"
+  }
+}
