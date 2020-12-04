@@ -328,14 +328,26 @@ function isTree(character) {
   return character === "#";
 }
 
-let treeCount = 0;
-let currentPosition = 0;
-
-for (let currentLine of lengthenedInput) {
-  if (isTree(currentLine[currentPosition])) {
-    treeCount++;
+function rightXDownY(x, y, treeMap) {
+  let treeCount = 0;
+  let currentPosition = 0;
+  for (let i = 0; i <= treeMap.length - 1; i += y) {
+    const currentLine = treeMap[i];
+    if (isTree(currentLine[currentPosition])) {
+      treeCount++;
+    }
+    currentPosition += x;
   }
-  currentPosition += 3;
+  return treeCount;
 }
 
-console.log(treeCount);
+const right1Down1 = rightXDownY(1, 1, lengthenedInput);
+const right3Down1 = rightXDownY(3, 1, lengthenedInput);
+const right5Down1 = rightXDownY(5, 1, lengthenedInput);
+const right7Down1 = rightXDownY(7, 1, lengthenedInput);
+const right1Down2 = rightXDownY(1, 2, lengthenedInput);
+
+const total =
+  right1Down1 * right3Down1 * right5Down1 * right7Down1 * right1Down2;
+
+console.log(total);
