@@ -1,6 +1,4 @@
 const fs = require("fs");
-const { difference } = require("lodash");
-
 const input = fs.readFileSync("./input.txt", "ascii");
 
 // If there is a single non-whitespace character, return false.
@@ -41,23 +39,96 @@ function cleanFurther(array) {
   return pretty;
 }
 
-function removeFurther(array) {
-  return array.map((item) => item.split(":")[0]);
+function validateByr(num) {
+  return num >= 1920 && num <= 2002;
+}
+
+function validateIyr(year) {
+  return year >= 2010 && year <= 2020;
+}
+
+function validateEyr(year) {
+  return year >= 2020 && year <= 2030;
+}
+
+function validateHgt(height) {
+  const matchValidHeightInCmOrIn = /(\d+)(cm)|(\d+)(in)/;
+  if (!matchValidHeightInCmOrIn.test(height)) {
+    return false;
+  }
+  const [
+    _fullMatch,
+    cmNumber,
+    _cmLabel,
+    inNumber,
+    _inLabel,
+  ] = matchValidHeightInCmOrIn.exec(height);
+  return (
+    (cmNumber >= 150 && cmNumber <= 193) || (inNumber >= 59 && inNumber <= 76)
+  );
+}
+
+function validateHcl(hairColor) {
+  return /#([0-9]|[a-f]){6}/.test(hairColor);
+}
+
+function validateEcl(eyeColor) {
+  const validEyeColors = ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"];
+  return validEyeColors.includes(eyeColor);
+}
+
+function validatePid(num) {
+  if (num) {
+    return num.toString().length === 9;
+  } else return false;
+}
+
+function validatePassport(passport) {
+  let validationArray = [];
+  const { byr, iyr, eyr, hgt, hcl, ecl, pid } = passport;
+  if (validateByr(byr)) {
+    validationArray.push(true);
+  } else validationArray.push(false);
+  if (validateIyr(iyr)) {
+    validationArray.push(true);
+  } else validationArray.push(false);
+  if (validateEyr(eyr)) {
+    validationArray.push(true);
+  } else validationArray.push(false);
+  if (hgt && validateHgt(hgt)) {
+    validationArray.push(true);
+  } else validationArray.push(false);
+  if (validateHcl(hcl)) {
+    validationArray.push(true);
+  } else validationArray.push(false);
+  if (validateEcl(ecl)) {
+    validationArray.push(true);
+  } else validationArray.push(false);
+  if (validatePid(pid)) {
+    validationArray.push(true);
+  } else validationArray.push(false);
+
+  const isValid = validationArray.includes(false);
+
+  return !isValid;
 }
 
 const blockified = blockifyInput(split);
 const cleaned = blockified.map((item) => cleanFurther(item));
-const simplified = cleaned.map((item) => removeFurther(item));
+const objectified = cleaned.map((array) => {
+  const holding = {};
+  array.forEach((item) => {
+    const [key, value] = item.split(":");
+    holding[key] = value;
+  });
+  return holding;
+});
 
-function validatePassport(passport) {
-  const requiredFields = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"];
-  return difference(requiredFields, passport).length === 0;
-}
-
-let valid = 0;
-for (let item of simplified) {
-  if (validatePassport(item)) {
-    valid++;
+let validCount = 0;
+for (let object of objectified) {
+  if (validatePassport(object)) {
+    validCount++;
   }
 }
-console.log(valid);
+
+console.log(validCount);
