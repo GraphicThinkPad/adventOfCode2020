@@ -328,11 +328,11 @@ function isTree(character) {
   return character === "#";
 }
 
-function rightXDownY(x, y, treeMap) {
+function rightXDownY(x, y, tobogganMap) {
   let treeCount = 0;
   let currentPosition = 0;
-  for (let i = 0; i <= treeMap.length - 1; i += y) {
-    const currentLine = treeMap[i];
+  for (let i = 0; i <= tobogganMap.length - 1; i += y) {
+    const currentLine = tobogganMap[i];
     if (isTree(currentLine[currentPosition])) {
       treeCount++;
     }
